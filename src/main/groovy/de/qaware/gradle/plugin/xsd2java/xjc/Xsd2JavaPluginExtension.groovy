@@ -54,6 +54,16 @@ class Xsd2JavaPluginExtension {
     File outputDir = project.file("${project.buildDir}/generated-sources/xsd2java")
 
     /**
+     * Fork jvm when generating xjc classes.
+     */
+    Boolean fork
+
+    /**
+     * Remove previously produced products before executing xjc.
+     */
+    Boolean removeOldOutput = true
+
+    /**
      * Initializes the new xsd2java extension.
      *
      * @param project the project this extension is added to.
@@ -99,6 +109,20 @@ class Xsd2JavaPluginExtension {
      */
     void extension(Boolean extension) {
         this.extension = extension
+    }
+
+    /**
+     * @param fork whenever the xjc compiler should fork when generating xjc classes. Supported by newer xjc generators.
+     */
+    void fork(Boolean fork) {
+        this.fork = fork
+    }
+
+    /**
+     * @param removeOldOutput whenever old products gets deleted before xjc generates files.
+     */
+    void removeOldOutput(Boolean removeOldOutput) {
+        this.removeOldOutput = removeOldOutput
     }
 
     /**

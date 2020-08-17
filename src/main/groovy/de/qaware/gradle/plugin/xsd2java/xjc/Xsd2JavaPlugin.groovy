@@ -26,7 +26,7 @@ import org.gradle.api.tasks.SourceSet
  */
 class Xsd2JavaPlugin implements Plugin<Project> {
 
-    def final static XML_BIND_VERSION = '2.2.11'
+    def final static XML_BIND_VERSION = '2.3.3'
 
     @Override
     void apply(Project project) {
@@ -62,6 +62,8 @@ class Xsd2JavaPlugin implements Plugin<Project> {
             outputDir = xsd2JavaExtension.outputDir
             arguments = xsd2JavaExtension.arguments
             extension = xsd2JavaExtension.extension
+            removeOldOutput = xsd2JavaExtension.removeOldOutput
+            fork = xsd2JavaExtension.fork
         }
         project.tasks.compileXsd2javaJava.dependsOn xsd2Java
     }
@@ -73,11 +75,9 @@ class Xsd2JavaPlugin implements Plugin<Project> {
      * @param xjc The source set used to add the dependencies to.
      */
     private static void addsDependencies(Project project, SourceSet xjc) {
-        project.dependencies.add(xjc.compileConfigurationName, "com.sun.xml.bind:jaxb-core:$XML_BIND_VERSION")
-        project.dependencies.add(xjc.compileConfigurationName, "com.sun.xml.bind:jaxb-impl:$XML_BIND_VERSION")
-        project.dependencies.add(xjc.compileConfigurationName, "javax.xml.bind:jaxb-api:$XML_BIND_VERSION")
-        project.dependencies.add(xjc.compileConfigurationName, "com.sun.xml.bind:jaxb-xjc:$XML_BIND_VERSION")
-        project.dependencies.add(xjc.compileConfigurationName, "javax.activation:activation:1.1.1")
+        project.dependencies.add(xjc.compileConfigurationName, "org.glassfish.jaxb:jaxb-xjc:$XML_BIND_VERSION")
+        project.dependencies.add(xjc.compileConfigurationName, "org.glassfish.jaxb:jaxb-runtime:$XML_BIND_VERSION")
+        project.dependencies.add(xjc.compileConfigurationName, "com.sun.activation:jakarta.activation:1.2.2")
 
         project.dependencies.add('xsd2javaExtension', "com.github.jaxb-xew-plugin:jaxb-xew-plugin:1.9")
         project.dependencies.add('xsd2javaExtension', "net.java.dev.jaxb2-commons:jaxb-fluent-api:2.1.8")

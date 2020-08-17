@@ -15,13 +15,13 @@
  */
 package de.qaware.gradle.plugin.xsd2java.xjc.tasks
 
+import org.gradle.api.AntBuilder
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
 
 import java.nio.file.Path
 import java.nio.file.Paths
-
 /**
  * Unit test for the {@link XSD2JavaTask}.
  */
@@ -34,6 +34,9 @@ class XSD2JavaTaskTest extends Specification {
         resources = resource.parent
 
         project = ProjectBuilder.builder().build()
+
+        project.ant.lifecycleLogLevel = AntBuilder.AntMessagePriority.DEBUG
+
         project.repositories {
             mavenCentral()
         }
@@ -62,6 +65,23 @@ class XSD2JavaTaskTest extends Specification {
             schemaDirPath = resources.toFile()
             packageName = 'dummySchema'
             extension = true
+        } as XSD2JavaTask
+
+        when:
+        task.execute()
+
+        then:
+        assert new File(project.buildDir, '/generated-sources/xsd2java/dummySchema/BookType.java').exists()
+        assert new File(project.buildDir, '/generated-sources/xsd2java/dummySchema/BooksType.java').exists()
+    }
+
+    def "GenerateSourcesFromXSDWithfork"() {
+        setup:
+        XSD2JavaTask task = project.task("xsd2JavaTask", type: XSD2JavaTask) {
+            schemaDirPath = resources.toFile()
+            packageName = 'dummySchema'
+            fork = true
+            removeOldOutput = false
         } as XSD2JavaTask
 
         when:
