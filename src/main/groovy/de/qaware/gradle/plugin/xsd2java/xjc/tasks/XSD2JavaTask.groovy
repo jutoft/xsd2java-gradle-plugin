@@ -63,6 +63,7 @@ class XSD2JavaTask extends DefaultTask {
     @TaskAction
     @SuppressWarnings("GroovyUnusedDeclaration")
     void generateSourcesFromXSD() {
+        project.configurations.xsd2javaCompile.resolve()
         ant.taskdef(
                 name: 'xjc',
                 classname: 'com.sun.tools.xjc.XJCTask',
@@ -81,6 +82,7 @@ class XSD2JavaTask extends DefaultTask {
             schema(dir: schemaDirPath, includes: '**/*.xsd')
 
             if (extension) {
+                project.configurations.xsd2javaExtension.resolve()
                 classpath(path: project.configurations.xsd2javaExtension.asPath)
             }
 
